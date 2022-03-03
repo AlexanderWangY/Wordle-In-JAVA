@@ -1,7 +1,8 @@
-package com.alexwala;
+package com.contructprac;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class Wordle {
     public static final String ANSI_RESET = "\u001B[0m";
@@ -16,6 +17,7 @@ public class Wordle {
             wordArray[i] = word.charAt(i);
         }
 
+
         System.out.println(wordArray);
 
         System.out.println("Take a guess at the word");
@@ -27,48 +29,55 @@ public class Wordle {
 
         wordHash = checkFor(wordArray);
 
-        char[] guess = {'R', 'R', 'R', 'R', 'R'};
+        while (true) {
 
-        ArrayList<Character> exceptionIndex = new ArrayList<>();
-        ArrayList<Integer> index = new ArrayList<>();
+            String input = scan.nextLine().toUpperCase();
 
-        for (int i = 0; i < 5; i++) {
-            index.clear();
-            //This checks if the letter has more than one re-occurance
-            if (wordHash.get(guess[i]) > 0) {
+            if (input.length() != 5) {
+                System.out.println("Enter in a 5 letter word");
+            } else {
 
+                char[] guess = new char[5];
 
-                for (int x = 0; x < 5; x++) {
-                    if (guess[i] == guess[x]) {
-                        index.add(x);
-                    }
+                for (int i = 0; i < 5; i++) {
+                    guess[i] = input.charAt(i);
                 }
 
+                System.out.println(guess);
+
+                ArrayList<Character> exceptionIndex = new ArrayList<>();
+                ArrayList<Integer> index = new ArrayList<>();
                 ArrayList<Integer> wordIndex = new ArrayList<>();
 
-                for (int x = 0; x < 5; x++) {
-                    if (wordArray[x] == guess[i]) {
-                        wordIndex.add(x);
+                for (int i = 0; i < 5; i++) {
+                    index.clear();
+                    //This checks if the letter has more than one re-occurance
+                    if (wordHash.get(guess[i]) != null && wordHash.get(guess[i]) > 0) {
+                        if (!exceptionIndex.contains(guess[i])) {
+
+                            for (int x = 0; x < 5; x++) {
+                                if (guess[i] == guess[x]) {
+                                    index.add(x);
+                                }
+                            }
+
+                            for (int x = 0; x < 5; x++) {
+                                if (wordArray[x] == guess[i]) {
+                                    wordIndex.add(x);
+                                }
+                            }
+
+
+                            wordIndex.retainAll(index);
+                            wordHash.put(guess[i], wordHash.get(guess[i]) - wordIndex.size());
+
+                            exceptionKey.put(guess[i], new ArrayList<Integer>(wordIndex));
+                        }
                     }
-                }
 
-                System.out.println(guess[i]);
-
-                System.out.println(index);
-                System.out.println(wordIndex);
-
-
-                index.retainAll(wordIndex);
-                if (!exceptionIndex.contains(guess[i])) {
-                    wordHash.put(guess[i], wordHash.get(guess[i]) - index.size());
                     exceptionIndex.add(guess[i]);
-                    exceptionKey.put(guess[i], index);
-                }
-            }
 
-            System.out.println(ANSI_GREEN + index + ANSI_RESET);
-            System.out.println(ANSI_YELLOW + wordHash + ANSI_RESET);
-            System.out.println(exceptionKey);
+
 
 
 
@@ -78,7 +87,6 @@ public class Wordle {
             /*if (index.contains(i)) {
                 System.out.print(ANSI_GREEN + guess[i] + ANSI_RESET);
             }
-
             if (wordHash.get(guess[i]) == null || wordHash.get(guess[i]) == 0) {
                 System.out.print(guess[i]);
             } else if (wordHash.get(guess[i]) > 0) {
@@ -86,6 +94,21 @@ public class Wordle {
                 wordHash.replace(guess[i], wordHash.get(guess[i]) - 1);
             } */
 
+                }
+
+
+                for (int i = 0; i < 5; i++) {
+                    if (wordHash.get(guess[i]) == 0 && exceptionKey.get(guess[i]).contains(i)) {
+                        System.out.print(ANSI_GREEN + guess[i] + ANSI_RESET);
+                    } else if (wordHash.get(guess[i]) > 0 && exceptionKey.get(guess[i]).contains(i)) {
+                        System.out.print(ANSI_GREEN + guess[i] + ANSI_RESET);
+                    } else if (wordHash.get(guess[i]) > 0 && !exceptionKey.get(guess[i]).contains(i)) {
+                        System.out.print(ANSI_YELLOW + guess[i] + ANSI_RESET);
+                    } else {
+                        System.out.print(guess[i]);
+                    }
+                }
+            }
         }
 
 
@@ -95,13 +118,9 @@ public class Wordle {
             if (guess.equals("END")) {
                 break;
             }
-
             for (int i = 0; i < 5; i++) {
                 guessArray[i] = guess.charAt(i);
             }
-
-
-
             for (int i = 0; i < 5; i++) {
                 if (guessArray[i] == wordArray[i]) {
                     System.out.print(ANSI_GREEN + guessArray[i] + ANSI_RESET);
