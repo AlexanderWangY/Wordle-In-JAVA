@@ -1,8 +1,15 @@
-# Wordle-In-JAVA
-Just a small personal project to create Wordle in Java!
+# Wordle In JAVA
 
-Still in progress as of Feb 2022
+## Instructions
+> USE AN IDE THAT CAN SHOW ANSI COLORS (for example, I use Intellij Community)
 
-Hopefully I finish soon it shouldn't be that hard! 
+Download Wordle.java and the Word csv file.
 
-:D
+Inside the Wordle.java code you will see places to put your file path in the "#" areas.
+
+Copy and paste the correct filepath that links it to the CSV file.
+
+ENJOY!
+
+### (Please sumbit bug and issues in the issues tab)
+
