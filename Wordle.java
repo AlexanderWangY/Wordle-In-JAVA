@@ -10,7 +10,7 @@ public class Wordle {
     public static final String ANSI_GREEN = "\u001B[32m";
 
     public static void main(String[] args) {
-        String word = "ERROR";
+        String word = "HELLO";
 
         char[] wordArray = new char[5];
         for (int i = 0; i < 5; i++) {
@@ -27,8 +27,6 @@ public class Wordle {
         HashMap<Character, ArrayList<Integer>> exceptionKey = new HashMap<>();
 
 
-        wordHash = checkFor(wordArray);
-
         while (true) {
 
             String input = scan.nextLine().toUpperCase();
@@ -36,6 +34,10 @@ public class Wordle {
             if (input.length() != 5) {
                 System.out.println("Enter in a 5 letter word");
             } else {
+
+                wordHash.clear();
+
+                wordHash = checkFor(wordArray);
 
                 char[] guess = new char[5];
 
@@ -52,62 +54,62 @@ public class Wordle {
                 for (int i = 0; i < 5; i++) {
                     index.clear();
                     //This checks if the letter has more than one re-occurance
-                    if (wordHash.get(guess[i]) != null && wordHash.get(guess[i]) > 0) {
-                        if (!exceptionIndex.contains(guess[i])) {
+                    if (wordHash.containsKey(guess[i])) {
+                        if (wordHash.get(guess[i]) > 0) {
+                            if (!exceptionIndex.contains(guess[i])) {
 
-                            for (int x = 0; x < 5; x++) {
-                                if (guess[i] == guess[x]) {
-                                    index.add(x);
+                                for (int x = 0; x < 5; x++) {
+                                    if (guess[i] == guess[x]) {
+                                        index.add(x);
+                                    }
                                 }
-                            }
 
-                            for (int x = 0; x < 5; x++) {
-                                if (wordArray[x] == guess[i]) {
-                                    wordIndex.add(x);
+                                for (int x = 0; x < 5; x++) {
+                                    if (wordArray[x] == guess[i]) {
+                                        wordIndex.add(x);
+                                    }
                                 }
+
+
+                                wordIndex.retainAll(index);
+                                wordHash.put(guess[i], wordHash.get(guess[i]) - wordIndex.size());
+
+                                exceptionKey.put(guess[i], new ArrayList<Integer>(wordIndex));
                             }
-
-
-                            wordIndex.retainAll(index);
-                            wordHash.put(guess[i], wordHash.get(guess[i]) - wordIndex.size());
-
-                            exceptionKey.put(guess[i], new ArrayList<Integer>(wordIndex));
                         }
+
+                        exceptionIndex.add(guess[i]);
                     }
 
-                    exceptionIndex.add(guess[i]);
 
 
-
-
-
-
-
-
-            /*if (index.contains(i)) {
-                System.out.print(ANSI_GREEN + guess[i] + ANSI_RESET);
-            }
-            if (wordHash.get(guess[i]) == null || wordHash.get(guess[i]) == 0) {
-                System.out.print(guess[i]);
-            } else if (wordHash.get(guess[i]) > 0) {
-                System.out.print(ANSI_YELLOW + guess[i] + ANSI_RESET);
-                wordHash.replace(guess[i], wordHash.get(guess[i]) - 1);
-            } */
 
                 }
 
 
                 for (int i = 0; i < 5; i++) {
-                    if (wordHash.get(guess[i]) == 0 && exceptionKey.get(guess[i]).contains(i)) {
-                        System.out.print(ANSI_GREEN + guess[i] + ANSI_RESET);
-                    } else if (wordHash.get(guess[i]) > 0 && exceptionKey.get(guess[i]).contains(i)) {
-                        System.out.print(ANSI_GREEN + guess[i] + ANSI_RESET);
-                    } else if (wordHash.get(guess[i]) > 0 && !exceptionKey.get(guess[i]).contains(i)) {
-                        System.out.print(ANSI_YELLOW + guess[i] + ANSI_RESET);
-                    } else {
+                    if (!wordHash.containsKey(guess[i])) {
                         System.out.print(guess[i]);
+                    } else {
+                        if (wordHash.get(guess[i]) == 0 && exceptionKey.get(guess[i]).contains(i)) {
+                            System.out.print(ANSI_GREEN + guess[i] + ANSI_RESET);
+                        } else if (wordHash.get(guess[i]) > 0 && exceptionKey.get(guess[i]).contains(i)) {
+                            System.out.print(ANSI_GREEN + guess[i] + ANSI_RESET);
+                            wordHash.replace(guess[i], wordHash.get(guess[i]) - 1);
+                        } else if (wordHash.get(guess[i]) > 0) {
+                            System.out.print(ANSI_YELLOW + guess[i] + ANSI_RESET);
+                            wordHash.replace(guess[i], wordHash.get(guess[i]) - 1);
+                        } else if (!exceptionKey.get(guess[i]).contains(i) || wordHash.get(guess[i]) == 0){
+                            System.out.print(guess[i]);
+                        }
                     }
                 }
+
+                System.out.println();
+                System.out.println(exceptionIndex);
+                System.out.println(exceptionKey);
+                System.out.println(wordHash);
+                System.out.println(index);
             }
         }
 
