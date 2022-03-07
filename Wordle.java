@@ -21,8 +21,8 @@ public class Wordle {
     public static final String ANSI_RED = "\u001B[31m";
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        File file = new File("C:/Users/Alex Wang/IdeaProjects/Wordle/src/com/alexwala/WordsCSV.csv");
-        String word = getRandomWord().toUpperCase();
+        File file = new File("#");
+        String word = getRandomWord(file).toUpperCase();
 
         Random rand = new Random();
 
@@ -51,7 +51,7 @@ public class Wordle {
                 System.err.println("Enter in a 5 letter word");
             } else {
 
-                if (validInput(input)) {
+                if (validInput(input, file)) {
 
                     wordHash.clear();
 
@@ -180,8 +180,7 @@ public class Wordle {
         return wordHash;
     }
 
-    public static boolean validInput(String input) throws FileNotFoundException {
-        File file = new File("C:/Users/Alex Wang/IdeaProjects/Wordle/src/com/alexwala/WordsCSV.csv");
+    public static boolean validInput(String input, File file) throws FileNotFoundException {
         Scanner scan = new Scanner(file);
 
         int found = 0;
@@ -200,8 +199,7 @@ public class Wordle {
         }
     }
 
-    public static String getRandomWord() throws IOException {
-        File file = new File("C:/Users/Alex Wang/IdeaProjects/Wordle/src/com/alexwala/WordsCSV.csv");
+    public static String getRandomWord(File file) throws IOException {
         Path path = Paths.get(String.valueOf(file));
 
         Random rand = new Random();
